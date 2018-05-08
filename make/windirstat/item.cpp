@@ -948,7 +948,11 @@ void CItem::DoSomeWork(DWORD ticks)
 					fi.name = finder.GetFileName();
 					fi.attributes = finder.GetAttributes();
 					// Retrieve file size
-					fi.length = finder.GetCompressedLength();
+					if (!(fi.attributes & FILE_ATTRIBUTE_REPARSE_POINT))
+						fi.length = finder.GetCompressedLength();
+					else
+						fi.length = 0;
+
 					finder.GetLastWriteTime(&fi.lastWriteTime);
 					// (We don't use GetLastWriteTime(CTime&) here, because, if the file has
 					// an invalid timestamp, that function would ASSERT and throw an Exception.)
